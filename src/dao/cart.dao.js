@@ -1,6 +1,8 @@
-import CartModel from "../../models/cart.model.js";
+import CartModel from "../models/cart.model";
+import TicketModel from "../models/ticket.model";
+import { calculateTotal } from "../utils/util";
 
-class CartManager {
+class CartDao {
   async createCart() {
     try {
       const newCart = new CartModel({ products: [] });
@@ -12,37 +14,26 @@ class CartManager {
     }
   }
 
-  async getCarts() {
-    try {
-      const carts = await CartModel.find();
-      return carts;
-    } catch (error) {
-      console.error("Error listing the carts");
-    }
-  }
-
   async getCartById(cartId) {
     try {
-      const cart = await CartModel.findById(cartId).populate(
-        "products.product"
-      ); //OJO CHECAR SI VA ENTRE COMILLAS. TOMÉ DESDE POPULATE DE ROX
-
+      const cart = await CartModel.findById(cartId).populate("products");
       if (!cart) {
-        throw new Error(`No cart found with id ${cartId}`);
+        console.error("We could not find a cart with the submitted id", error);
+        return null;
       }
       return cart;
     } catch (error) {
-      console.error("Error getting cart by ID:", error);
+      console.error("Error getting the cart", error);
       throw error;
     }
   }
 
   async addProductToCart(cartId, productId, quantity = 1) {
     try {
-      const cart = await CartModel.findById(cartId); //SI NO JALA PROBAR CON ESTO const cart = await this.getCartById(cartId);
+      const cart = await CartModel.findById(cartId);
       const existingProduct = cart.products.find(
         (p) => p.product._id.toString() === productId
-      ); //AQUI AGREGUE: _id
+      );
       if (existingProduct) {
         existingProduct.quantity += quantity;
       } else {
@@ -62,7 +53,7 @@ class CartManager {
       const cart = await this.getCartById(cartId);
       cart.products = cart.products.filter(
         (p) => p.product._id.toString() !== productId
-      ); //AQUI AGREGUE: _id
+      );
       cart.markModified("products");
       await cart.save();
       return cart;
@@ -75,7 +66,7 @@ class CartManager {
   async updateCart(cartId, updatedProducts) {
     try {
       const cart = await this.getCartById(cartId);
-      cart.products = updatedProducts; //CHECAR SI DEBO PONER aqui y arriba "products" en vez de "updatedProducts"
+      cart.products = updatedProducts;
       cart.markModified("products");
       await cart.save();
       return cart;
@@ -85,7 +76,6 @@ class CartManager {
     }
   }
 
-  //CHECAR LO DE ACTUALIZAR
   async updateProductQuantity(cartId, productId, newQuantity) {
     try {
       const cart = await this.getCartById(cartId);
@@ -120,6 +110,21 @@ class CartManager {
       throw error;
     }
   }
+
+  async addProductsToTicket(products, code, purchaser) {
+    try {
+      const ticket = new TicketModel({
+        code,
+        purchase_datetime: new Date(),
+        amount: calculateTotal(products),
+        purchaser,
+      });
+      await ticket.save();
+      return ticket;
+    } catch (error) {
+      throw new Error("Error");
+    }
+  }
 }
 
-export default CartManager;
+export default new CartDao();

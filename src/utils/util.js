@@ -6,4 +6,14 @@ const createHash = (password) =>
 const isValidPassword = (password, user) =>
   bcrypt.compareSync(password, user.password);
 
-export { createHash, isValidPassword };
+//Cart utils (esto se podría poner en un archivo aparteque se llame cart.utils.js)
+const calculateTotal = (products) => {
+  let total = 0;
+
+  products.forEach((item) => {
+    total += item.product.price * item.quantity;
+  });
+  return total;
+};
+
+export { createHash, isValidPassword, calculateTotal };

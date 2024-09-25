@@ -8,9 +8,9 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   cart_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "carts",
+    ref: "carts", //referencia a la colección de carritos
     required: true,
-  },
+  }, //VALIDAR QUE ESTO FUNCIONE
   role: {
     type: String,
     enum: ["admin", "user"],

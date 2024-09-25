@@ -17,6 +17,7 @@ const cartSchema = new mongoose.Schema({
   ],
 });
 
+//populate para traer los datos de los productos. DUDA: ¿Puedo ponerlo en la carpeta de middleware?
 cartSchema.pre("findOne", function (next) {
   this.populate("products.product", "_id title price");
   next();

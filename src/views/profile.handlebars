@@ -1,0 +1,9 @@
+<div class="container-welcome"></div>
+    <h2>Bienvenido{{user.username}} !!</h2>
+    <h3>Email: {{user.email}}</h3>
+    <h3>Rol: {{user.role}}</h3>
+</div>
+
+<form class="logout-form" action="/api/sessions/logout" method="POST">
+    <button type="submit">Logout</button>
+</form>

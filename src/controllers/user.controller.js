@@ -7,17 +7,22 @@ class UserController {
     const { first_name, last_name, email, age, password } = req.body;
 
     try {
+      //Checar si está ok meter lo del cart aquí
+      const cart = new Cart();
+      await cart.save();
+
       const newUser = await userService.registerUser({
         first_name,
         last_name,
         email,
         age,
         password,
+        cart_id: cart._id,
       });
 
       const token = jwt.sign(
         {
-          usuario: `${newUser.first_name} ${newUser.last_name}`,
+          username: `${newUser.first_name} ${newUser.last_name}`, //Cambié aquí lo de usuario a username, checar si no causa problemas
           email: newUser.email,
           role: newUser.role,
         },
@@ -29,7 +34,7 @@ class UserController {
         maxAge: 3600000,
         httpOnly: true,
       });
-      res.redirect("/api/sessions/current");
+      res.redirect("/api/sessions/current"); //CHECAR SI aqui deberia decir /api/sessions/profile
     } catch (error) {
       res.status(500).send("Server error");
     }
@@ -42,7 +47,7 @@ class UserController {
       const user = await userService.loginUser(email, password);
       const token = jwt.sign(
         {
-          usuario: `${user.first_name} ${user.last_name}`,
+          username: `${user.first_name} ${user.last_name}`,
           email: user.email,
           role: user.role,
         },
@@ -54,17 +59,18 @@ class UserController {
         maxAge: 3600000,
         httpOnly: true,
       });
-      res.redirect("/api/sessions/current");
+      res.redirect("/api/sessions/current"); //CHECAR SI aqui deberia decir /api/sessions/profile
     } catch (error) {
       res.status(500).send("Server error");
     }
   }
 
   async current(req, res) {
+    //CHECAR SI aqui deberia decir profile(req, res)
     if (req.user) {
       const user = req.user;
       const userDTO = new UserDTO(user);
-      res.render("home", { user: userDTO });
+      res.render("profile", { user: userDTO });
     } else {
       res.send("Not authorized");
     }
@@ -76,4 +82,4 @@ class UserController {
   }
 }
 
-export default new UserController();
+export default UserController;

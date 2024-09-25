@@ -87,3 +87,50 @@ h1 {
 .card {
   margin-right: 20px !important;
 }
+
+/* Contenedor principal para la bienvenida */
+.container-welcome {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+/* Estilo para el título de bienvenida */
+.container-welcome h2 {
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Estilo para los detalles del usuario */
+.container-welcome h3 {
+  font-size: 18px;
+  color: #666;
+  margin: 5px 0;
+}
+
+/* Estilo para el formulario de logout */
+logout-form {
+  margin-top: 20px;
+}
+
+/* Estilo para el botón de logout */
+logout-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff5733;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+logout-form button:hover {
+  background-color: #e74c3c;
+}

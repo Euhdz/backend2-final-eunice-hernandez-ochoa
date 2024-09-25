@@ -3,6 +3,9 @@ const router = Router();
 import ProductManager from "../dao/db/product-manager-db.js";
 import CartManager from "../dao/db/cart-manager-db.js";
 
+//Traemos middleware de auth
+import { onlyAdmin, onlyUser } from "../middleware/auth.middleware.js";
+
 const productManager = new ProductManager();
 const cartManager = new CartManager();
 
@@ -14,40 +17,52 @@ router.get("/register", (req, res) => {
   res.render("register");
 });
 
-router.get("/realtimeproducts", async (req, res) => {
-  res.render("realtimeproducts");
-});
-
-router.get("/products", async (req, res) => {
-  try {
-    const { page = 1, limit = 3 } = req.query;
-    const products = await productManager.getProducts({
-      page: parseInt(page),
-      limit: parseInt(limit),
-    });
-
-    const newArray = products.docs.map((product) => {
-      const { _id, ...rest } = product.toObject();
-      return rest;
-    });
-
-    res.render("products", {
-      products: newArray,
-      hasPrevPage: products.hasPrevPage,
-      hasNextPage: products.hasNextPage,
-      prevPage: products.prevPage,
-      nextPage: products.nextPage,
-      currentPage: products.page,
-      totalPages: products.totalPages,
-    });
-  } catch (error) {
-    console.error("Error obtaining the products", error);
-    res.status(500).json({
-      status: "error",
-      error: "Server error",
-    });
+router.get(
+  "/realtimeproducts",
+  passport.authenticate("jwt", { session: false }),
+  onlyAdmin,
+  (req, res) => {
+    res.render("realtimeproducts");
   }
-});
+);
+
+//Aplicamos el JWT passport para que solo el admin pueda ver realtimeproducts y solo los users puedan ver la ruta products
+
+router.get(
+  "/products",
+  passport.authenticate("jwt", { session: false }),
+  onlyUser,
+  async (req, res) => {
+    try {
+      const { page = 1, limit = 3 } = req.query;
+      const products = await productManager.getProducts({
+        page: parseInt(page),
+        limit: parseInt(limit),
+      });
+
+      const newArray = products.docs.map((product) => {
+        const { _id, ...rest } = product.toObject();
+        return rest;
+      });
+
+      res.render("products", {
+        products: newArray,
+        hasPrevPage: products.hasPrevPage,
+        hasNextPage: products.hasNextPage,
+        prevPage: products.prevPage,
+        nextPage: products.nextPage,
+        currentPage: products.page,
+        totalPages: products.totalPages,
+      });
+    } catch (error) {
+      console.error("Error obtaining the products", error);
+      res.status(500).json({
+        status: "error",
+        error: "Server error",
+      });
+    }
+  }
+);
 
 router.get("/carts/:cid", async (req, res) => {
   const cartId = req.params.cid;

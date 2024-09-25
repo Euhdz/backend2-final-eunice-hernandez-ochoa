@@ -1,6 +1,9 @@
 import express from "express";
 import CartManager from "../dao/db/cart-manager-db.js";
-import CartModel from "../dao/models/cart.model.js";
+import CartModel from "../models/cart.model.js";
+import ProductModel from "../models/product.model.js";
+import UserModel from "../models/user.model.js";
+import { calculateTotal } from "../utils/util.js";
 
 //PREGUNTA PARA SAMU O ALLAN: Podría aquí usarse el CartModel en vez del CartManager?
 
@@ -116,6 +119,63 @@ router.delete("/:cid", async (req, res) => {
     res.json({ message: "Cart cleared successfully" });
   } catch (error) {
     console.error("Error clearing the cart", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//Finalizar compra --OJO: PENDIENTE HACER EL FILTRADO DE LOS PRODUCTOSSIN STOCK SUFICIENTE PARA ANTES DEL cartProducts
+router.get("/:cid/purchase", async (req, res) => {
+  //Llamamos al carrito por su id y a todos sus productos y validamos si hay stock.
+  //Si no hay stock no se agrega el producto al carrito y se regresa a un array.
+  const cartId = req.params.cid;
+  try {
+    const cart = await CartModel.findById(cartId).populate("products.product");
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found" });
+    }
+
+    const cartProducts = cart.products;
+    const unavailableProducts = []; // Array para almacenar los productos no disponibles
+    let totalAmount = 0;
+
+    for (const item of cartProducts) {
+      const product = item.product;
+      const quantity = item.quantity;
+
+      if (product.stock >= quantity) {
+        product.stock = product.stock - quantity;
+        totalAmount += product.price * quantity;
+        await product.save();
+      } else {
+        unavailableProducts.push(productId);
+      }
+    }
+
+    //Llamamos al usuario pues necesitamos sus datos para finalizar la compra
+
+    const cartUser = await UserModel.findOne({ cart: cartId });
+    if (!cartUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const ticket = new TicketModel({
+      purchase_datetime: Date.now(),
+      amount: totalAmount,
+      purchaser: cartUser.email,
+    });
+    await ticket.save();
+    // Actualizar el carrito para que contenga solo los productos no disponibles
+    cart.products = cart.products.filter((item) =>
+      unavailableProducts.includes(item.product._id)
+    );
+    await cart.save();
+
+    res.status(200).json({
+      message: "Purchase completed",
+      productsNotProcessed: unavailableProducts,
+    });
+  } catch (error) {
+    console.error("Error processing the purchase", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

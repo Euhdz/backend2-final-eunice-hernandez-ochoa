@@ -23,6 +23,11 @@ const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
+          //Agregué buscar el usuario en la base de datos usando el ID del payload JWT
+          const user = await UserModel.findById(jwt_payload.id);
+          if (!user) {
+            return done(null, false);
+          }
           return done(null, jwt_payload);
         } catch (error) {
           return done(error);
