@@ -67,6 +67,7 @@ class UserController {
 
   async current(req, res) {
     //CHECAR SI aqui deberia decir profile(req, res)
+
     if (req.user) {
       const user = req.user;
       const userDTO = new UserDTO(user);
@@ -82,4 +83,4 @@ class UserController {
   }
 }
 
-export default UserController;
+export default new UserController();

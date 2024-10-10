@@ -2,8 +2,9 @@ import express from "express";
 import exphbs from "express-handlebars";
 import passport from "passport";
 import cookieParser from "cookie-parser";
-import initializePassport from "./config/config.js";
+import initializePassport from "./config/passport.config.js";
 import "./database.js";
+import cors from "cors"; //Por si queremos conectar con el front
 
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
@@ -19,6 +20,7 @@ app.use(express.static("./src/public"));
 app.use(cookieParser());
 app.use(passport.initialize());
 initializePassport();
+app.use(cors()); //Por si queremos conectar con el front
 
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
@@ -30,5 +32,5 @@ app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter);
 
 app.listen(PORT, () => {
-  console.log(`Listening port: ${PUERTO}`);
+  console.log(`Listening port: ${PORT}`);
 });

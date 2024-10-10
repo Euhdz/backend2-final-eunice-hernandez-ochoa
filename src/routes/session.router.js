@@ -2,6 +2,8 @@ import { Router } from "express";
 import passport from "passport";
 import userController from "../controllers/user.controller.js";
 
+//POR QUE SE IMPORTA userController? No debiera ser UserController?
+
 const router = Router();
 
 //Register

@@ -1,4 +1,4 @@
-import cartDao from "../dao/cart.dao";
+import cartDao from "../dao/cart.dao.js";
 
 //CHECAR SI ES NECESARIO PONER EL TRY...CATCH EN ESTE ARCHIVO O CON EL DEL DAO ES SUFICIENTE
 class CartRepository {

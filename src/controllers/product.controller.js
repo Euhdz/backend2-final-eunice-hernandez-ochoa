@@ -1,9 +1,9 @@
-import productRepository from "../repositories/product.repository";
+import ProductRepository from "../repositories/product.repository.js";
 
 class ProductController {
   async getProducts(req, res) {
     const { limit = 4, page = 1, sort, query } = req.query;
-    const products = await productRepository.getProducts({
+    const products = await ProductRepository.getProducts({
       limit,
       page,
       sort,
@@ -14,26 +14,26 @@ class ProductController {
 
   async getProductById(req, res) {
     const { id } = req.params;
-    const product = await productRepository.getProductById(id);
+    const product = await ProductRepository.getProductById(id);
     res.json(product);
   }
 
   async addProduct(req, res) {
     const product = req.body;
-    const newProduct = await productRepository.addProduct(product);
+    const newProduct = await ProductRepository.addProduct(product);
     res.json(newProduct);
   }
 
   async updateProduct(req, res) {
     const { id } = req.params;
     const product = req.body;
-    const updatedProduct = await productRepository.updateProduct(id, product);
+    const updatedProduct = await ProductRepository.updateProduct(id, product);
     res.json(updatedProduct);
   }
 
   async deleteProduct(req, res) {
     const { id } = req.params;
-    const deletedProduct = await productRepository.deleteProduct(id);
+    const deletedProduct = await ProductRepository.deleteProduct(id);
     res.json(deletedProduct);
   }
 }

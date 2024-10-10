@@ -1,6 +1,6 @@
-import CartModel from "../models/cart.model";
-import TicketModel from "../models/ticket.model";
-import { calculateTotal } from "../utils/util";
+import CartModel from "../models/cart.model.js";
+import TicketModel from "../models/ticket.model.js";
+import { calculateTotal } from "../utils/util.js";
 
 class CartDao {
   async createCart() {

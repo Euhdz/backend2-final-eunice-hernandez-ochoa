@@ -1,13 +1,17 @@
 import { Router } from "express";
 const router = Router();
-import ProductManager from "../dao/db/product-manager-db.js";
-import CartManager from "../dao/db/cart-manager-db.js";
+// import ProductManager from "../dao/db/product-manager-db.js";
+// import CartManager from "../dao/db/cart-manager-db.js";
+
+import ProductController from "../controllers/product.controller.js";
+const productController = new ProductController();
+
+import CartController from "../controllers/cart.controller.js";
+const cartController = new CartController();
 
 //Traemos middleware de auth
 import { onlyAdmin, onlyUser } from "../middleware/auth.middleware.js";
-
-const productManager = new ProductManager();
-const cartManager = new CartManager();
+import passport from "passport";
 
 router.get("/login", (req, res) => {
   res.render("login");
@@ -35,7 +39,7 @@ router.get(
   async (req, res) => {
     try {
       const { page = 1, limit = 3 } = req.query;
-      const products = await productManager.getProducts({
+      const products = await productController.getProducts({
         page: parseInt(page),
         limit: parseInt(limit),
       });

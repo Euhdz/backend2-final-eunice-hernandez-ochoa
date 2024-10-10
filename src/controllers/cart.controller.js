@@ -1,7 +1,31 @@
-import cartRepository from "../repositories/cart.repository";
-import ticketRepository from "../repositories/ticket.repository";
+import cartRepository from "../repositories/cart.repository.js";
+import ticketRepository from "../repositories/ticket.repository.js";
 
 class CartController {
+  async createCart() {
+    try {
+      const newCart = await cartRepository.createCart();
+      return newCart;
+    } catch (error) {
+      console.error("Error creating the cart", error);
+      throw error;
+    }
+  }
+
+  async getCartById(cartId) {
+    try {
+      const cart = await cartRepository.getCartById(cartId);
+      if (!cart) {
+        console.error("We could not find a cart with the submitted id", error);
+        return null;
+      }
+      return cart;
+    } catch (error) {
+      console.error("Error getting the cart", error);
+      throw error;
+    }
+  }
+
   async addProductToCart(cartId, productId, quantity = 1) {
     try {
       const cart = await cartRepository.addProductToCart(

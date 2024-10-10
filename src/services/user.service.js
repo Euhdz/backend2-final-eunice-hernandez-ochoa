@@ -4,9 +4,9 @@ import { createHash, isValidPassword } from "../utils/util.js";
 
 class UserService {
   async registerUser(userData) {
-    const exisitingUser = await UserRepository.getUserByEmail(userData.email);
+    const existingUser = await UserRepository.getUserByEmail(userData.email);
 
-    if (exisitingUser)
+    if (existingUser)
       throw new Error("This user was already registered, please log in");
 
     //Creamos nuevo carrito

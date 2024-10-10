@@ -12,6 +12,22 @@ class UserRepository {
   async getUserByEmail(email) {
     return await UserDao.findOne({ email });
   }
+
+  async updateUser(id, userData) {
+    return await UserDao.updateOne({ _id: id }, userData);
+  }
+
+  async deleteUser(id) {
+    return await UserDao.deleteOne({ _id: id });
+  }
+
+  async getAllUsers() {
+    return await UserDao.find({});
+  }
+
+  async getUserByUsername(username) {
+    return await UserDao.findOne({ username });
+  }
 }
 
 export default new UserRepository();
