@@ -3,6 +3,7 @@ const router = Router();
 import { calculateTotal } from "../utils/util.js";
 
 import CartController from "../controllers/cart.controller.js";
+
 const cartController = new CartController();
 
 router.post("/", cartController.createCart);

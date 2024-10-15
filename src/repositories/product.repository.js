@@ -1,10 +1,10 @@
-import productDao from "../dao/product.dao.js";
+import ProductDao from "../dao/product.dao.js";
 
 class ProductRepository {
   async getProducts({ limit = 4, page = 1, sort, query } = {}) {
     try {
       const skip = (page - 1) * limit;
-      const products = await productDao.getProducts({
+      const products = await ProductDao.getProducts({
         limit,
         page,
         sort,
@@ -17,7 +17,7 @@ class ProductRepository {
   }
   async getProductById(id) {
     try {
-      const product = await productDao.getProductById(id);
+      const product = await ProductDao.getProductById(id);
       return product;
     } catch (error) {
       throw error;
@@ -26,7 +26,7 @@ class ProductRepository {
 
   async addProduct(product) {
     try {
-      const newProduct = await productDao.addProduct(product);
+      const newProduct = await ProductDao.addProduct(product);
       return newProduct;
     } catch (error) {
       throw error;
@@ -35,7 +35,10 @@ class ProductRepository {
 
   async updateProduct(id, product) {
     try {
-      const updatedProduct = await productDao.updateProduct(id, product);
+      const updatedProduct = await PageTransitionEventroductDao.updateProduct(
+        id,
+        product
+      );
       return updatedProduct;
     } catch (error) {
       throw error;
@@ -43,7 +46,7 @@ class ProductRepository {
   }
   async deleteProduct(id) {
     try {
-      const deletedProduct = await productDao.deleteProduct(id);
+      const deletedProduct = await ProductDao.deleteProduct(id);
       return deletedProduct;
     } catch (error) {
       throw error;

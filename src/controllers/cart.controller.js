@@ -1,10 +1,12 @@
-import cartRepository from "../repositories/cart.repository.js";
+import CartRepository from "../repositories/cart.repository.js";
 import ticketRepository from "../repositories/ticket.repository.js";
+import CartModel from "../models/cart.model.js";
+import cartDao from "../dao/cart.dao.js";
 
 class CartController {
   async createCart() {
     try {
-      const newCart = await cartRepository.createCart();
+      const newCart = await CartRepository.createCart();
       return newCart;
     } catch (error) {
       console.error("Error creating the cart", error);
@@ -14,7 +16,7 @@ class CartController {
 
   async getCartById(cartId) {
     try {
-      const cart = await cartRepository.getCartById(cartId);
+      const cart = await CartRepository.getCartById(cartId);
       if (!cart) {
         console.error("We could not find a cart with the submitted id", error);
         return null;
@@ -28,7 +30,7 @@ class CartController {
 
   async addProductToCart(cartId, productId, quantity = 1) {
     try {
-      const cart = await cartRepository.addProductToCart(
+      const cart = await CartRepository.addProductToCart(
         cartId,
         productId,
         quantity
@@ -41,7 +43,7 @@ class CartController {
   }
   async removeProductFromCart(cartId, productId) {
     try {
-      const cart = await cartRepository.removeProductFromCart(
+      const cart = await CartRepository.removeProductFromCart(
         cartId,
         productId
       );
@@ -53,7 +55,7 @@ class CartController {
   }
   async updateProductQuantity(cartId, productId, newQuantity) {
     try {
-      const cart = await cartRepository.updateProductQuantity(
+      const cart = await CartRepository.updateProductQuantity(
         cartId,
         productId,
         newQuantity
@@ -66,7 +68,7 @@ class CartController {
   }
   async clearCart(cartId) {
     try {
-      const cart = await cartRepository.clearCart(cartId);
+      const cart = await CartRepository.clearCart(cartId);
       return cart;
     } catch (error) {
       console.error("Error clearing the cart", error);

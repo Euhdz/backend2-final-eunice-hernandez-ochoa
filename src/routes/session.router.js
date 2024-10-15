@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import userController from "../controllers/user.controller.js";
+import UserController from "../controllers/user.controller.js";
 
 //POR QUE SE IMPORTA userController? No debiera ser UserController?
 
@@ -8,22 +8,22 @@ const router = Router();
 
 //Register
 
-router.post("/register", userController.register);
+router.post("/register", UserController.register);
 
 // Login
 
-router.post("/login", userController.login);
+router.post("/login", UserController.login);
 
 //Current
 
 router.get(
   "/current",
   passport.authenticate("jwt", { session: false }),
-  userController.current
+  UserController.current
 );
 
 //Logout
 
-router.post("/logout", userController.logout);
+router.post("/logout", UserController.logout);
 
 export default router;

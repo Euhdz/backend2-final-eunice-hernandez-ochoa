@@ -1,18 +1,13 @@
 import passport from "passport";
 import jwt from "passport-jwt";
+//import UserModel from "../models/user.model.js";
+//import { Strategy as LocalStrategy } from "passport-local";
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJwt = jwt.ExtractJwt;
 
 const initializePassport = () => {
-  const cookieExtractor = (req) => {
-    let token = null;
-
-    if (req && req.cookies) {
-      token = req.cookies["coderCookieToken"];
-    }
-    return token;
-  };
+  //PENDIENTE METER ESTRATEGIA REGISTER Y LOGIN
 
   passport.use(
     "jwt",
@@ -23,11 +18,11 @@ const initializePassport = () => {
       },
       async (jwt_payload, done) => {
         try {
-          //Agregué buscar el usuario en la base de datos usando el ID del payload JWT
-          const user = await UserModel.findById(jwt_payload.id);
-          if (!user) {
-            return done(null, false);
-          }
+          //CHECAR SI DEJO LO SIGUIENTE:Agregué buscar el usuario en la base de datos usando el ID del payload JWT
+          //const user = await UserModel.findById(jwt_payload.user._id); //Checar si va aquí (jwt_payload.user._id) o (jwt_payload.id)
+          // if (!user) {
+          //  return done(null, false);
+          //}
           return done(null, jwt_payload);
         } catch (error) {
           return done(error);
@@ -35,6 +30,15 @@ const initializePassport = () => {
       }
     )
   );
+};
+
+const cookieExtractor = (req) => {
+  let token = null;
+
+  if (req && req.cookies) {
+    token = req.cookies["coderCookieToken"];
+  }
+  return token;
 };
 
 export default initializePassport;

@@ -13,4 +13,4 @@ class TicketDao {
   }
 }
 
-export default new TicketDao(); // Cuando se pone  export default new TicketDao() vs export default TicketDao,?
+export default new TicketDao();
